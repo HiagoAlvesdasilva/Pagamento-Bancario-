@@ -18,6 +18,7 @@ public abstract class Pagamento {
     public double getValor() {
         return valor;
     }
+
     public void setStatus(String status) {
         this.status = status;
     }
