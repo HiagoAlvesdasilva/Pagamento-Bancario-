@@ -9,7 +9,7 @@ public class Main {
 
         SistemaDePagamentoService sistema = new SistemaDePagamentoService();
 
-        Pagamento pagamentoBoleto = PagamentoFactory.criarPagamento("boleto", 250.00, "Pendente");
+        Pagamento pagamentoBoleto = PagamentoFactory.criarPagamento("boleto", 250.00,"Pendente");
         sistema.processarPagamento(pagamentoBoleto);
 
         Pagamento pagamentoCartao = PagamentoFactory.criarPagamento("cartao", 250.00, "Pendente", "João", "1234567890");
