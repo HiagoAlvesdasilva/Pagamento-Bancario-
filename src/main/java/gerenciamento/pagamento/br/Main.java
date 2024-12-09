@@ -1,23 +1,28 @@
 package gerenciamento.pagamento.br;
 
+import gerenciamento.pagamento.br.domain.model.BoletoBancario;
+import gerenciamento.pagamento.br.domain.model.CartaoDeCretido;
 import gerenciamento.pagamento.br.domain.model.Pagamento;
+import gerenciamento.pagamento.br.domain.model.enums.StatusPagamentoEnum;
 import gerenciamento.pagamento.br.factory.PagamentoFactory;
 import gerenciamento.pagamento.br.service.SistemaDePagamentoService;
 
 public class Main {
     public static void main(String[] args) {
 
-        SistemaDePagamentoService sistema = new SistemaDePagamentoService();
+        SistemaDePagamentoService pagamentoService = new SistemaDePagamentoService();
 
-        Pagamento pagamentoBoleto = PagamentoFactory.criarPagamento("boleto", 250.00,"Pendente");
-        sistema.processarPagamento(pagamentoBoleto);
+//        pagamentoService.processarPagamento(1,100.0);
+//        pagamentoService.processarPagamento(2,150.0);
+//        pagamentoService.processarPagamento(3,200.0);
 
-        Pagamento pagamentoCartao = PagamentoFactory.criarPagamento("cartao", 250.00, "Pendente", "João", "1234567890");
-        sistema.processarPagamento(pagamentoCartao);
+        CartaoDeCretido cartaoDeCretido = new CartaoDeCretido(100, StatusPagamentoEnum.PENDENTE,"Teste","123456789");
+        cartaoDeCretido.verificarStatus();
+        cartaoDeCretido.realizarPagamento();
 
-        Pagamento pagamentoPayPal = PagamentoFactory.criarPagamento(250.00, "Pendente", "João", "jao@email.com,",
-                "paypal");
-        sistema.processarPagamento(pagamentoPayPal);
 
-    }
+        BoletoBancario boletoBancario = new BoletoBancario(150.00, StatusPagamentoEnum.PAGO);
+        boletoBancario.realizarPagamento();
+
+  }
 }

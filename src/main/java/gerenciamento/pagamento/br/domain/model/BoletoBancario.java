@@ -1,30 +1,59 @@
 package gerenciamento.pagamento.br.domain.model;
 
+import gerenciamento.pagamento.br.domain.model.enums.StatusPagamentoEnum;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Random;
+
 public class BoletoBancario extends Pagamento{
 
     private String codigoDeBarras;
 
-    public BoletoBancario(double valor, String status, String codigoDeBarras) {
-        super(valor, status);
+    public BoletoBancario(double valor, StatusPagamentoEnum statusPagamento, String codigoDeBarras) {
+        super(valor, statusPagamento);
         this.codigoDeBarras = codigoDeBarras;
     }
 
-    public String gerarCodigoBarras() {
-        return "12345678901234567890";
+    public BoletoBancario(double valor, StatusPagamentoEnum statusPagamento) {
+        super(0.0,statusPagamento);
+    }
+
+    public String gerarCodigoDeBarras(){
+        Random random = new Random();
+        StringBuilder codigoDeBarras = new StringBuilder();
+
+        LocalDate data = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        codigoDeBarras.append(data.format(formatter));
+
+        for (int i = 0; i< 35; i++){
+            codigoDeBarras.append(random.nextInt(10));
+        }
+        return codigoDeBarras.toString();
+    }
+
+    public String getCodigoDeBarras(){
+        return gerarCodigoDeBarras();
     }
 
     @Override
     public void realizarPagamento() {
-        String codigoBarras = gerarCodigoBarras();
-        System.out.println("Gerado boleto bancário com código: " + codigoBarras+ " no valor de R$"+ this.getValor());
-    this.setStatus("Aguardando Pagamento");
+        verificarStatus();
+        System.out.println("Gerado Boleto Com Codigo: "+ getCodigoDeBarras());
+        setValor(StatusPagamentoEnum.AGUARDANDO_CONFIRMACAO_DE_PAGAMENTO.getKey());
     }
 
-    public String getCodigoDeBarras() {
-        return codigoDeBarras;
+    @Override
+    public void verificarStatus() {
+        if (getStatusPagamento() == StatusPagamentoEnum.PENDENTE){
+            realizarPagamento();
+        }else if (getStatusPagamento() == StatusPagamentoEnum.AGUARDANDO_CONFIRMACAO_DE_PAGAMENTO){
+            System.out.println("Por Favor Aguarde A Confirmação do Seu Pagamento");
+        }else {
+            System.out.println("O Boleto :"+getCodigoDeBarras()+" já foi Pago");
+        }
     }
 
-    public void setCodigoDeBarras(String codigoDeBarras) {
-        this.codigoDeBarras = codigoDeBarras;
-    }
+
 }
